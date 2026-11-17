@@ -1,0 +1,123 @@
+[project]
+name = "ondeka-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14,<=3.15"
+dependencies = [
+    "litestar-autowire>=0.2.0",
+    "litestar[sqlalchemy]>=2.25.0",
+    "pydantic-settings>=2.16.3",
+    "structlog>=26.1.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+lint = [
+  "ruff>=0.17.4",
+  "ty>=0.0.100",
+]
+test = [
+  "pytest>=9.2.0",
+  "pytest-asyncio>=1.4.1",
+  "pytest-cov>=7.1.0",
+]
+dev = [
+  { include-group = "lint" },
+  { include-group = "test" },
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+  "A",     # flake8-builtins
+  "ASYNC", # flake8-async
+  "B",     # flake8-bugbear
+  "BLE",   # flake8-blind-except
+  "C4",    # flake8-comprehensions
+  "C90",   # mccabe
+  "DTZ",   # flake8-datetimez
+  "E",     # pycodestyle - errors
+  "ERA",   # eradicate
+  "F",     # pyflakes
+  "G",     # flake8-logging-format
+  "I",     # isort
+  "ICN",   # flake8-import-conventions
+  "N",     # pep8-naming
+  "PIE",   # flake8-pie
+  "PLC",   # pylint - convention
+  "PLE",   # pylint - error
+  "PLW",   # pylint - warning
+  "PT",    # flake8-pytest-style
+  "PTH",   # flake8-use-pathlib
+  "RET",   # flake8-return
+  "RUF",   # Ruff-specific rules
+  "S",     # flake8-bandit
+  "SIM",   # flake8-simplify
+  "T10",   # flake8-debugger
+  "T20",   # flake8-print
+  "TID",   # flake8-tidy-imports
+  "UP",    # pyupgrade
+  "W",     # pycodestyle - warnings
+  "D",     # pydocstyle
+]
+ignore = [
+  "A005",    # module shadows a Python standard-library module
+  "D100",    # missing docstring in public module
+  "D104",    # missing docstring in public package
+  "D105",    # missing docstring in magic method
+  "D106",    # missing docstring in public nested class
+  "D107",    # missing docstring in __init__
+  "E501",    # line too long, handled by ruff format
+  "PLC0415", # import should be at the top-level of a file
+  "RET504",  # unnecessary assignment before return statement
+  "SIM108",  # use ternary operator instead of if-else block
+]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = [
+  "litestar.params.Body",
+  "litestar.params.Dependency",
+  "litestar.params.Parameter",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "tests"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = [
+  "classmethod",
+  "sqlalchemy.orm.declared_attr",
+  "sqlalchemy.orm.declared_attr.directive",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/controllers.py" = ["RUF012"]
+"**/controllers/*.py" = ["RUF012"]
+"tests/**" = ["D", "S"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest]
+minversion = "9.0"
+strict = true
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 90
