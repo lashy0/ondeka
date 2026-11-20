@@ -1,0 +1,5 @@
+name: ondeka
+
+include:
+  - path: ./postgres/compose.yaml
+    env_file: ../.env

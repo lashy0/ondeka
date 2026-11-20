@@ -1,0 +1,28 @@
+x-default-logging: &default-logging
+  driver: local
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  db:
+    image: postgres:18-alpine
+    logging: *default-logging
+    environment:
+      POSTGRES_DB: "${DATABASE_NAME:?Set DATABASE_NAME in .env}"
+      POSTGRES_USER: "${DATABASE_USER:?Set DATABASE_USER in .env}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD:?Set DATABASE_PASSWORD in .env}"
+    ports:
+      - "127.0.0.1:${DATABASE_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -h 127.0.0.1 -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres_data:
