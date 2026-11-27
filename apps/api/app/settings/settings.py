@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .application import AppSettings
 from .database import DatabaseSettings
+from .logging import LoggingSettings
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 
@@ -23,6 +24,7 @@ class Settings(BaseSettings):
 
     app: AppSettings = Field(default_factory=AppSettings)
     database: DatabaseSettings = Field(default_factory=DatabaseSettings)
+    logging: LoggingSettings = Field(default_factory=LoggingSettings)
 
 
 @lru_cache

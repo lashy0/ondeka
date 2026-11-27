@@ -1,16 +1,16 @@
 [project]
 name = "ondeka-api"
 version = "0.1.0"
-description = "Add your description here"
+description = ""
 readme = "README.md"
 requires-python = ">=3.14,<=3.15"
 dependencies = [
     "asyncpg>=0.32.0",
     "litestar-autowire>=0.2.0",
+    "litestar-granian>=0.17.0",
     "litestar[sqlalchemy]>=2.25.0",
     "pydantic-settings>=2.16.3",
     "structlog>=26.1.0",
-    "uvicorn[standard]>=0.54.0",
 ]
 
 [dependency-groups]
