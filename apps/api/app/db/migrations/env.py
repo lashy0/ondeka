@@ -8,11 +8,17 @@ from alembic.autogenerate import rewriter
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine, async_engine_from_config
 
+from app.db import models  # noqa: F401
+
 if TYPE_CHECKING:
     from advanced_alchemy.alembic.commands import AlembicCommandConfig
     from sqlalchemy.engine import Connection
 
-__all__ = ("do_run_migrations", "run_migrations_offline", "run_migrations_online")
+__all__ = (
+    "do_run_migrations",
+    "run_migrations_offline",
+    "run_migrations_online",
+)
 
 
 # this is the Alembic Config object, which provides
