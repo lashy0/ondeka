@@ -29,16 +29,15 @@ SHARED_PROCESSORS: tuple[Processor, ...] = (
 def _format_console_event(
     _: WrappedLogger, __: str, event: EventDict, *, colors: bool
 ) -> EventDict:
-    timestamp = datetime.now(UTC).time().isoformat(timespec="milliseconds")
-    event["timestamp"] = f"{timestamp} UTC"
+    record = event["_record"]
+    event["timestamp"] = datetime.fromtimestamp(record.created, UTC).strftime("%H:%M:%S UTC")
 
     level = event["level"]
     label = level.upper()
     style = DEFAULT_STYLES.get(f"logging.level.{level}") if colors else None
-    event["level"] = (style.render(label) if style else label) + " " * (8 - len(label))
+    event["level"] = (style.render(label) if style else label) + " " * (7 - len(label))
 
     if not event["_from_structlog"]:
-        record = event["_record"]
         arguments = event.pop("positional_args")
 
         if record.name == "granian.access" and record.msg == DEFAULT_ACCESSLOG_FMT:
@@ -58,8 +57,7 @@ def _create_console_renderer() -> ConsoleRenderer:
         ),
     )
     columns = {column.key: column for column in renderer.columns}
-    text_column = partial(
-        KeyValueColumnFormatter,
+    level_column = KeyValueColumnFormatter(
         key_style=None,
         value_style="",
         reset_style="",
@@ -67,8 +65,8 @@ def _create_console_renderer() -> ConsoleRenderer:
     )
     renderer.columns = [
         columns["timestamp"],
-        Column("level", text_column()),
-        Column("logger", text_column(width=24)),
+        Column("level", level_column),
+        columns["logger"],
         columns["event"],
         columns[""],
     ]
